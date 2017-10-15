@@ -1,0 +1,37 @@
+::-webkit-scrollbar {
+	display: none;
+}
+
+::-moz-scrollbar {
+	display: none;
+}
+
+::-o-scrollbar {
+	display: none;
+}
+
+* {
+	scroll: "no";
+}
+
+/**
+ * Overwrite React Slider default styles
+ */
+
+.clickable {
+	cursor: pointer !important;
+}
+
+.rangeslider__fill {
+	background-color: black !important;
+}
+
+.rangeslider__handle {
+	background: none !important;
+}
+
+.stocks-component__segment {
+	overflow: auto !important;
+	height: 614px !important;
+	max-height: 614px !important;
+}
