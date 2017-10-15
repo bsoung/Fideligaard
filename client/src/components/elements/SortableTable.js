@@ -17,7 +17,7 @@ const Row = ({ cells, onClick }) => (
     {cells.map((p, i) => (
       <Table.Cell
         className="clickable"
-        key={`${p + i + Math.floor(Math.random() * 1000) + 1}`}
+        key={`${p + i + Math.floor(Math.random() * 10000) + 1}`}
         content={p}
       />
     ))}
@@ -50,7 +50,7 @@ const SortableTable = ({ headers, rows, onClick, sort }) => (
       {rows.map(({ cells, onClick }, i) => (
         <Row
           onClick={onClick}
-          key={`${cells[0] + i + Math.floor(Math.random() * 1000) + 1}`}
+          key={`${cells[0] + i + Math.floor(Math.random() * 10000) + 1}`}
           cells={cells}
         />
       ))}

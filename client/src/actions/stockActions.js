@@ -30,15 +30,9 @@ const setStocks = stocks => {
 const ensureFetch = async url => {
   const response = await fetch(url);
   if (!response.ok) {
-    console.log("************************ error ********************");
-
     throw new FetchError(response);
   }
 
-  console.log(
-    response,
-    "************************ do we get results ********************"
-  );
   return response.json();
 };
 
@@ -58,6 +52,7 @@ export const fetchStocks = (start, end, tickers) => async dispatch => {
     dispatch(setFetching());
     const url = `/api/stocks/fetch?start=${start}&end=${end}&tickers=${tickers}`;
     const json = await ensureFetch(url);
+    console.log(json, "what is this json data??");
     dispatch(setStocks(json));
     dispatch(setRange(start, end));
     dispatch(setCurrent(start));

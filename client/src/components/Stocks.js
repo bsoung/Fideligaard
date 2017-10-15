@@ -11,6 +11,7 @@ const Stocks = ({ stocks, date, sort, filter, onSort, onFilter, onTrade }) => {
       onClick: onTrade(values.Ticker)
     };
   });
+  console.log(stocks, "what do we get in stocks?");
   return (
     <Segment className="stocks-component__segment">
       <Grid>
