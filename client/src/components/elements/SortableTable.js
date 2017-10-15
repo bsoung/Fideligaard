@@ -15,7 +15,11 @@ const HeaderCellContent = (name, sort) => {
 const Row = ({ cells, onClick }) => (
   <Table.Row onClick={onClick}>
     {cells.map((p, i) => (
-      <Table.Cell className="clickable" key={`${p + i}`} content={p} />
+      <Table.Cell
+        className="clickable"
+        key={`${p + i + Math.floor(Math.random() * 1000) + 1}`}
+        content={p}
+      />
     ))}
   </Table.Row>
 );
@@ -44,7 +48,11 @@ const SortableTable = ({ headers, rows, onClick, sort }) => (
     </Table.Header>
     <Table.Body>
       {rows.map(({ cells, onClick }, i) => (
-        <Row onClick={onClick} key={`${cells[0] + i}`} cells={cells} />
+        <Row
+          onClick={onClick}
+          key={`${cells[0] + i + Math.floor(Math.random() * 1000) + 1}`}
+          cells={cells}
+        />
       ))}
     </Table.Body>
   </Table>

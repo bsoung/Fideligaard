@@ -9,6 +9,10 @@ class StocksContainer extends Component {
     this.props.hydrateStocks();
   }
 
+  componentDidUpdate() {
+    console.log(this.props.stocks, "what are the new stocks?");
+  }
+
   onSort = column => () => {
     const direction =
       this.props.sort.column === column ? !this.props.sort.direction : true;

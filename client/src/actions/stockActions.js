@@ -30,8 +30,15 @@ const setStocks = stocks => {
 const ensureFetch = async url => {
   const response = await fetch(url);
   if (!response.ok) {
+    console.log("************************ error ********************");
+
     throw new FetchError(response);
   }
+
+  console.log(
+    response,
+    "************************ do we get results ********************"
+  );
   return response.json();
 };
 
