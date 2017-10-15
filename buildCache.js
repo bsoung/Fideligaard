@@ -4,13 +4,18 @@ const CACHE_FILE = "./stockData.json";
 const START_DATE = "20160101";
 const END_DATE = "20170101";
 
-const buildCache = () => {
-	fetchParsedRecords({ start: START_DATE, end: END_DATE })
-		.then(records => {
-			fs.writeFileSync(CACHE_FILE, JSON.stringify(records));
-			console.log("Done!");
-		})
-		.catch(e => console.log(e.stack ? e.stack : e));
-};
+fetchParsedRecords({ start: START_DATE, end: END_DATE })
+	.then(records => {
+		fs.writeFileSync(CACHE_FILE, JSON.stringify(records));
+	})
+	.catch(e => console.log(e.stack ? e.stack : e));
 
-module.exports = buildCache;
+// const buildCache = () => {
+// 	fetchParsedRecords({ start: START_DATE, end: END_DATE })
+// 		.then(records => {
+// 			fs.writeFileSync(CACHE_FILE, JSON.stringify(records));
+// 		})
+// 		.catch(e => console.log(e.stack ? e.stack : e));
+// };
+
+// module.exports = buildCache;

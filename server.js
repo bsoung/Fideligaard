@@ -6,19 +6,15 @@ const express = require("express");
 const app = express();
 
 // Check if stock data exists
-const fs = require("fs");
-const buildCache = require("./buildCache");
-
-fs.stat("stockData.json", (err, stat) => {
-  if (err == null) {
-    return;
-  } else if (err.code == "ENOENT") {
-    // file does not exist
-    buildCache();
-  } else {
-    console.log("fs error: ", err.code);
-  }
-});
+// fs.stat("stockData.json", (err, stat) => {
+//   if (err == null) {
+//   } else if (err.code == "ENOENT") {
+//     // file does not exist
+//     buildCache();
+//   } else {
+//     console.log("fs error: ", err.code);
+//   }
+// });
 
 // Set development port to 3001
 app.set("port", process.env.PORT || 3001);
