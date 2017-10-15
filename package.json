@@ -1,0 +1,28 @@
+{
+  "name": "project_fideligard_spa",
+  "version": "1.0.0",
+  "description": "Buy low, sell high.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev":
+      "concurrently -c red,blue \"cd client && npm start\" \"nodemon server.js\" "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bsoung/Fideligaard.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bsoung/Fideligaard/issues"
+  },
+  "homepage": "https://github.com/bsoung/Fideligaard#readme",
+  "dependencies": {
+    "concurrently": "^3.5.0",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.4",
+    "isomorphic-fetch": "^2.2.1",
+    "moment": "^2.18.1"
+  }
+}
