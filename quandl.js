@@ -89,10 +89,6 @@ const fetchRecords = async ({ start, end, columns, tickers }) => {
 
     data = await data.json();
 
-    console.log(
-      data.datatable.data,
-      "this is what we get from iso fetch and buildUrl"
-    );
     records = records.concat(data.datatable.data);
 
     next = data.meta.next_cursor_id;
@@ -100,6 +96,8 @@ const fetchRecords = async ({ start, end, columns, tickers }) => {
   } while (next);
 
   if (!records) throw new Error("Unable to fetch records");
+
+  console.log(records, "records");
   return records;
 };
 
