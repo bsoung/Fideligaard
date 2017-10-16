@@ -144,6 +144,7 @@ const populate = (start, end) => (data, [company, prices]) => {
 
   data.dates.map((day, index) => {
     const price = prices[day];
+    console.log(price, "are these the price");
     mostRecentPrice = price ? price : mostRecentPrice;
 
     data.records[day][company] = priceMap.reduce(

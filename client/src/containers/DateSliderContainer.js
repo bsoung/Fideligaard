@@ -20,8 +20,6 @@ class DateSliderContainer extends Component {
   onChangeCurrentComplete = () => {
     const { actions, dates } = this.props;
 
-    console.log(dates, "what are the dates on end");
-
     actions.updateCurrent(dates.array[this.state.current]);
   };
 
