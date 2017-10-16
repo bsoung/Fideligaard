@@ -30,7 +30,6 @@ const setStocks = stocks => {
 const ensureFetch = async url => {
   const response = await fetch(url);
   if (!response.ok) {
-    console.log(response, "an ERROR occured");
     throw new FetchError(response);
   }
 
@@ -53,6 +52,7 @@ export const fetchStocks = (start, end, tickers) => async dispatch => {
     dispatch(setFetching());
     const url = `/api/stocks/fetch?start=${start}&end=${end}&tickers=${tickers}`;
     const json = await ensureFetch(url);
+    console.log(json, "here we get the stocks");
     dispatch(setStocks(json));
     dispatch(setRange(start, end));
     dispatch(setCurrent(start));

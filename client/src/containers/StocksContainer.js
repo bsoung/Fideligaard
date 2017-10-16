@@ -1,10 +1,11 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { createSelector } from "reselect";
 import Stocks from "../components/Stocks";
 import { stockActions } from "../actions";
 
-class StocksContainer extends Component {
+class StocksContainer extends PureComponent {
   componentDidMount() {
     this.props.hydrateStocks();
   }
@@ -19,33 +20,46 @@ class StocksContainer extends Component {
     this.props.updateFilter(event.target.value);
   };
 
-  onTrade = ticker => () => this.props.history.push(`/trade?ticker=${ticker}`);
-
   render() {
     return (
       <Stocks
         {...this.props}
         onSort={this.onSort}
         onFilter={this.onFilter}
-        onTrade={this.onTrade}
+        onTrade={this.props.onTrade}
       />
     );
   }
 }
 
-const filterStocks = (stocks, date) => {
-  let selection = stocks.records[date];
-  if (selection) {
-    selection = Object.values(selection);
+const getDate = state => state.dates.current;
+const getRecords = state => state.stocks.records;
+const getFilter = state => state.stocks.filter;
+const getSortColumn = state => state.stocks.sort.column;
+const getSortDirection = state => state.stocks.sort.direction;
 
-    if (stocks.filter) {
-      selection = selection.filter(stock =>
-        stock.Ticker.includes(stocks.filter.toUpperCase())
-      );
-    }
+const getCurrentStocks = createSelector(
+  [getRecords, getDate],
+  (records, date) => {
+    const selection = records[date];
+    return selection ? Object.values(selection) : [];
+  }
+);
 
-    const { column, direction } = stocks.sort;
-    selection = selection.sort((a, b) => {
+const getCurrentFilteredStocks = createSelector(
+  [getCurrentStocks, getFilter],
+  (stocks, filter) => {
+    const query = filter.toUpperCase();
+    return filter
+      ? stocks.filter(stock => stock.Ticker.includes(query))
+      : stocks;
+  }
+);
+
+const getCurrentFilteredSortedStocks = createSelector(
+  [getCurrentFilteredStocks, getSortColumn, getSortDirection],
+  (stocks, column, direction) => {
+    return stocks.sort((a, b) => {
       [a, b] = [a[column], b[column]];
       if (!direction) [a, b] = [b, a];
 
@@ -53,19 +67,16 @@ const filterStocks = (stocks, date) => {
       if (a < b) return -1;
       else return 0;
     });
-
-    return selection;
-  } else {
-    return [];
   }
-};
+);
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   return {
-    stocks: filterStocks(state.stocks, state.dates.current),
+    stocks: getCurrentFilteredSortedStocks(state),
     date: state.dates.current,
     sort: state.stocks.sort,
-    filter: state.stocks.filter
+    filter: state.stocks.filter,
+    onTrade: ownProps.onTrade
   };
 };
 
@@ -76,6 +87,4 @@ const mapDispatchToProps = dispatch => ({
   updateFilter: filter => dispatch(stockActions.setFilter(filter))
 });
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(StocksContainer)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(StocksContainer);

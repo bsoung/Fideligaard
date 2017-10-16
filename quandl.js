@@ -76,20 +76,20 @@ const fetchRecords = async ({ start, end, columns, tickers }) => {
     tickers = `ticker=${tickerArray.join(",")}`;
   }
 
+  // if column undefined, build out our base columns for quandl api
   columns = columns ? columns : ["ticker", "date", "close"];
   columns = `qopts.columns=${columns.join(",")}`;
 
   let records = [];
   let next;
 
+  // build our record in the format ['ticker', 'date', 'price']
   do {
     const queries = [date, columns, tickers, next].filter(q => !!q);
     let data = await fetch(buildUrl(queries));
 
     data = await data.json();
     records = records.concat(data.datatable.data);
-
-    console.log(records, "records");
 
     next = data.meta.next_cursor_id;
     next = next ? `qopts.cursor_id=${next}` : next;
@@ -173,13 +173,17 @@ const fetchParsedRecords = async ({ start, end, columns, tickers }) => {
   start = moment(start);
   end = end ? moment(end) : start.clone().add(1, "year");
 
+  // build [ticker, date, price]
   const recordArray = await fetchRecords({ start, end, columns, tickers });
+
   const recordHash = buildRecordHash(recordArray);
   const symbols = Object.keys(recordHash);
   const dates = buildDateList(start, end);
   const records = buildRecords(dates);
 
   const schema = { records, symbols, dates };
+
+  console.log("is this being called errtime");
 
   return Object.entries(recordHash).reduce(populate(start, end), schema);
 };

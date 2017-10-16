@@ -40,11 +40,24 @@ app.get("/api/stocks/fetch", async (req, res, next) => {
   try {
     let { start, end, columns, tickers } = req.query;
 
+    console.log(req.query, "what is this");
+
     columns = columns ? columns.split(",") : columns;
     tickers = isNaN(tickers) && tickers ? tickers.split(",") : tickers;
     [start, end] = [+start, +end];
 
-    res.json(await fetchParsedRecords({ start, end, columns, tickers }));
+    console.log(columns, "columns");
+    console.log(tickers, "tickers");
+    console.log(start, end);
+
+    const parsedRecords = await fetchParsedRecords({
+      start,
+      end,
+      columns,
+      tickers
+    });
+
+    res.json(parsedRecords);
   } catch (error) {
     next(error);
   }

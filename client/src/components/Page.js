@@ -3,7 +3,7 @@ import { Grid, Header, Segment } from "semantic-ui-react";
 import { resourceNames, ResourceContainer } from "../containers/resources";
 import Findable from "./elements/Findable";
 import DateSliderContainer from "../containers/DateSliderContainer";
-import StocksContainer from "../containers/StocksContainer";
+import StocksContainerWrapper from "../containers/StocksContainerWrapper";
 
 const Page = ({ match }) => {
   const type = match.params.type;
@@ -18,7 +18,7 @@ const Page = ({ match }) => {
         <Grid container={true} stackable>
           <Grid.Row>
             <Grid.Column tablet={16} computer={6}>
-              <StocksContainer />
+              <StocksContainerWrapper />
             </Grid.Column>
             <Grid.Column tablet={16} computer={10}>
               <DateSliderContainer />
