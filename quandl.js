@@ -97,7 +97,7 @@ const fetchRecords = async ({ start, end, columns, tickers }) => {
 
   if (!records) throw new Error("Unable to fetch records");
 
-  console.log(records, "records");
+  // console.log(records, "records"); // HERE - stock name/date/price show up
   return records;
 };
 
@@ -181,19 +181,19 @@ const fetchParsedRecords = async ({ start, end, columns, tickers }) => {
   // build [ticker, date, price]
   const recordArray = await fetchRecords({ start, end, columns, tickers });
 
-  console.log(recordArray, "recordArray");
+  // console.log(recordArray, "recordArray"); // HERE - all good //  [ 'A', '2016-05-11', 42.46 ],
 
   const recordHash = buildRecordHash(recordArray);
 
-  // console.log(recordHash, "recordHash");
+  console.log(recordHash, "recordHash");
 
   const symbols = Object.keys(recordHash);
 
-  // console.log(symbols, "symbols");
+  // console.log(symbols, "symbols"); // all good
 
   const dates = buildDateList(start, end);
 
-  console.log(dates, "dates");
+  // console.log(dates, "dates"); // all good
 
   const records = buildRecords(dates);
 
@@ -201,14 +201,14 @@ const fetchParsedRecords = async ({ start, end, columns, tickers }) => {
 
   const schema = { records, symbols, dates };
 
-  // console.log(schema, "schema");
+  console.log(schema, "schema");
 
   const result = Object.entries(recordHash).reduce(
     populate(start, end),
     schema
   );
 
-  console.log(result.records, "records"); // TODO: in heroku, Price is undefined, 1d/7d/30d is NaN
+  // console.log(result.records, "records"); // TODO: in heroku, Price is undefined, 1d/7d/30d is NaN
 
   return result;
 };
