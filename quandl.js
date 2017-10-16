@@ -141,7 +141,7 @@ const getFirstPrice = (prices, start, end) => {
   while (!prices[+day] && day < end) {
     day.add(1, "day");
   }
-  console.log(+day), "what does heroku think day is");
+  console.log(+day, "what does heroku think day is");
   // console.log(typeof +day, typeof Number(day), "+ first then normal");
   console.log(prices[+day], "what does this return???");
   return prices[+day];
