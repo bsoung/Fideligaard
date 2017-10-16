@@ -29,7 +29,7 @@ const fetchTickers = async (date, days = 10) => {
 
   date = moment(+date).tz(TIME_ZONE);
 
-  console.log(date, "what is our date here - compare to local");
+  console.log(date, "what is our date here - compare to local again");
 
   const columns = "qopts.columns=ticker";
 
