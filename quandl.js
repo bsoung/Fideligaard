@@ -144,7 +144,7 @@ const populate = (start, end) => (data, [company, prices]) => {
 
   data.dates.map((day, index) => {
     const price = prices[day];
-    console.log(price, "are these the price");
+    // console.log(price, "are these the price"); // TODO: PROBLEM: prices here ALL undefined in heroku
     mostRecentPrice = price ? price : mostRecentPrice;
 
     data.records[day][company] = priceMap.reduce(
@@ -161,6 +161,8 @@ const populate = (start, end) => (data, [company, prices]) => {
       { Price: mostRecentPrice, Ticker: company }
     );
   });
+
+  // return an object populated with the keys 'records', 'symbols', 'dates' and their values
   return data;
 };
 
@@ -184,9 +186,15 @@ const fetchParsedRecords = async ({ start, end, columns, tickers }) => {
 
   const schema = { records, symbols, dates };
 
-  console.log("is this being called errtime");
+  const result = Object.entries(recordHash).reduce(
+    populate(start, end),
+    schema
+  );
 
-  return Object.entries(recordHash).reduce(populate(start, end), schema);
+  // console.log(result, "what is result");
+  console.log(result.records, "records");
+
+  return result;
 };
 
 module.exports = { fetchTickers, fetchRecords, fetchParsedRecords };
