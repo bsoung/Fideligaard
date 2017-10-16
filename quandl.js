@@ -88,6 +88,8 @@ const fetchRecords = async ({ start, end, columns, tickers }) => {
     const queries = [date, columns, tickers, next].filter(q => !!q);
     let data = await fetch(buildUrl(queries));
 
+    console.log(data, "this is what we get from iso fetch and buildUrl");
+
     data = await data.json();
     records = records.concat(data.datatable.data);
 
@@ -191,8 +193,7 @@ const fetchParsedRecords = async ({ start, end, columns, tickers }) => {
     schema
   );
 
-  // console.log(result, "what is result");
-  console.log(result.records, "records");
+  // console.log(result.records, "records"); // TODO: in heroku, Price is undefined, 1d/7d/30d is NaN
 
   return result;
 };
