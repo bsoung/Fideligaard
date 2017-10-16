@@ -131,11 +131,14 @@ const buildRecords = dates => {
 };
 
 const getFirstPrice = (prices, start, end) => {
+  console.log(moment, "what is this moment????");
   const day = moment(start);
 
   while (!prices[+day] && day < end) {
     day.add(1, "day");
   }
+
+  console.log(prices[+day], "what does this return???");
   return prices[+day];
 };
 
@@ -143,11 +146,12 @@ const priceMap = [["1d", 1], ["7d", 7], ["30d", 30]];
 
 const populate = (start, end) => (data, [company, prices]) => {
   let mostRecentPrice = getFirstPrice(prices, start, end);
-
+  console.log(mostRecentPrice, "what is this most recent price???");
   data.dates.map((day, index) => {
     const price = prices[day];
     // console.log(price, "are these the price"); // TODO: PROBLEM: prices here ALL undefined in heroku
     mostRecentPrice = price ? price : mostRecentPrice;
+    // console.log(mostRecentPrice, 'most recent price')
 
     data.records[day][company] = priceMap.reduce(
       (prices, [name, diff]) => {
@@ -165,7 +169,7 @@ const populate = (start, end) => (data, [company, prices]) => {
   });
 
   // return an object populated with the keys 'records', 'symbols', 'dates' and their values
-  console.log(data.records, "populate data records");
+  // console.log(data.records, "populate data records");
   return data;
 };
 
