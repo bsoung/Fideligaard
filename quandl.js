@@ -1,6 +1,8 @@
 require("isomorphic-fetch");
 require("dotenv").config();
-const moment = require("moment");
+const moment = require("moment-timezone");
+const TIME_ZONE = "America/New_York";
+// moment.utc(value, "DD/MM/YYYY").unix();
 
 ///////////////////////////
 // Fetching private methods
@@ -25,7 +27,7 @@ const midDate = (start, end) => moment((start + end) / 2).startOf("day");
 const fetchTickers = async (date, days = 10) => {
   if (!date) throw new Error("A date is required");
 
-  date = moment(+date);
+  date = moment(+date).tz(TIME_ZONE);
 
   const columns = "qopts.columns=ticker";
 
@@ -55,10 +57,10 @@ strings. To fetch a custom set of columns, pass them in as an array of strings.
 const fetchRecords = async ({ start, end, columns, tickers }) => {
   if (!start) throw new Error("A start date is required");
 
-  start = moment(start);
+  start = moment(start).tz(TIME_ZONE);
 
   // clone moment to avoid mutating original
-  end = end ? moment(end) : start.clone().add(1, "year");
+  end = end ? moment(end).tz(TIME_ZONE) : start.clone().add(1, "year");
   const date = `date.gte=${formatDate(start)}&date.lt=${formatDate(end)}`;
 
   tickers = tickers === undefined ? 39 : tickers;
@@ -108,16 +110,16 @@ const fetchRecords = async ({ start, end, columns, tickers }) => {
 const buildRecordHash = records => {
   return records.reduce((records, [ticker, date, price]) => {
     records[ticker] = records[ticker] ? records[ticker] : {};
-    records[ticker][Number(moment(date))] = price;
+    records[ticker][+moment(date).tz(TIME_ZONE)] = price;
     return records;
   }, {});
 };
 
 const buildDateList = (start, end) => {
-  const day = moment(start);
+  const day = moment(start).tz(TIME_ZONE);
   const dateList = [];
   do {
-    dateList.push(Number(day));
+    dateList.push(+day);
     day.add(1, "day");
   } while (day < end);
   return dateList;
@@ -131,23 +133,23 @@ const buildRecords = dates => {
 };
 
 const getFirstPrice = (prices, start, end) => {
-  const day = moment(start);
-  console.log(prices, "the prices passed in");
+  const day = moment(start).tz(TIME_ZONE);
+  // console.log(prices, "the prices passed in");
 
-  while (!prices[Number(day)] && day < end) {
+  while (!prices[+day] && day < end) {
     day.add(1, "day");
   }
-  console.log(Number(day), "what does heroku think day is");
+  // console.log(Number(day), "what does heroku think day is");
   // console.log(typeof +day, typeof Number(day), "+ first then normal");
-  console.log(prices[Number(day)], "what does this return???");
-  return prices[Number(day)];
+  // console.log(prices[Number(day)], "what does this return???");
+  return prices[+day];
 };
 
 const priceMap = [["1d", 1], ["7d", 7], ["30d", 30]];
 
 const populate = (start, end) => (data, [company, prices]) => {
   let mostRecentPrice = getFirstPrice(prices, start, end);
-  console.log(mostRecentPrice, "what is this most recent price???");
+  // console.log(mostRecentPrice, "what is this most recent price???");
   data.dates.map((day, index) => {
     const price = prices[day];
     // console.log(price, "are these the price"); // TODO: PROBLEM: prices here ALL undefined in heroku
@@ -161,7 +163,7 @@ const populate = (start, end) => (data, [company, prices]) => {
         } else {
           const prevPrice =
             data.records[data.dates[index - diff]][company].Price;
-          prices[name] = Number(prevPrice - mostRecentPrice).toFixed(2);
+          prices[name] = +(prevPrice - mostRecentPrice).toFixed(2);
         }
         return prices;
       },
@@ -181,8 +183,8 @@ const populate = (start, end) => (data, [company, prices]) => {
 const fetchParsedRecords = async ({ start, end, columns, tickers }) => {
   if (!start) throw new Error("A start date is required");
 
-  start = moment(start);
-  end = end ? moment(end) : start.clone().add(1, "year");
+  start = moment(start).tz(TIME_ZONE);
+  end = end ? moment(end).tz(TIME_ZONE) : start.clone().add(1, "year");
 
   // build [ticker, date, price]
   const recordArray = await fetchRecords({ start, end, columns, tickers });
