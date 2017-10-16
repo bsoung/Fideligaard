@@ -29,6 +29,8 @@ const fetchTickers = async (date, days = 10) => {
 
   date = moment(+date).tz(TIME_ZONE);
 
+  console.log(date, "what is our date here - compare to local");
+
   const columns = "qopts.columns=ticker";
 
   let tickers;
@@ -134,14 +136,14 @@ const buildRecords = dates => {
 
 const getFirstPrice = (prices, start, end) => {
   const day = moment(start).tz(TIME_ZONE);
-  // console.log(prices, "the prices passed in");
+  console.log(prices, "the prices passed in");
 
   while (!prices[+day] && day < end) {
     day.add(1, "day");
   }
-  // console.log(Number(day), "what does heroku think day is");
+  console.log(+day), "what does heroku think day is");
   // console.log(typeof +day, typeof Number(day), "+ first then normal");
-  // console.log(prices[Number(day)], "what does this return???");
+  console.log(prices[+day], "what does this return???");
   return prices[+day];
 };
 
@@ -149,7 +151,7 @@ const priceMap = [["1d", 1], ["7d", 7], ["30d", 30]];
 
 const populate = (start, end) => (data, [company, prices]) => {
   let mostRecentPrice = getFirstPrice(prices, start, end);
-  // console.log(mostRecentPrice, "what is this most recent price???");
+  console.log(mostRecentPrice, "what is this most recent price???");
   data.dates.map((day, index) => {
     const price = prices[day];
     // console.log(price, "are these the price"); // TODO: PROBLEM: prices here ALL undefined in heroku
