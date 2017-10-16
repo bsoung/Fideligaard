@@ -64,7 +64,6 @@ const fetchRecords = async ({ start, end, columns, tickers }) => {
   tickers = tickers === undefined ? 39 : tickers;
 
   if (tickers.join) {
-    console.log("ticker join conditional true");
     tickers = `ticker=${tickers.join(",")}`;
   } else if (tickers > 0) {
     let tickerArray = await fetchTickers(midDate(start, end));
@@ -88,9 +87,9 @@ const fetchRecords = async ({ start, end, columns, tickers }) => {
     const queries = [date, columns, tickers, next].filter(q => !!q);
     let data = await fetch(buildUrl(queries));
 
-    console.log(data, "this is what we get from iso fetch and buildUrl");
-
     data = await data.json();
+
+    console.log(data, "this is what we get from iso fetch and buildUrl");
     records = records.concat(data.datatable.data);
 
     next = data.meta.next_cursor_id;
