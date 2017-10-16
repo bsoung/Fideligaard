@@ -185,11 +185,11 @@ const fetchParsedRecords = async ({ start, end, columns, tickers }) => {
 
   const recordHash = buildRecordHash(recordArray);
 
-  console.log(recordHash, "recordHash");
+  // console.log(recordHash, "recordHash");
 
   const symbols = Object.keys(recordHash);
 
-  console.log(symbols, "symbols");
+  // console.log(symbols, "symbols");
 
   const dates = buildDateList(start, end);
 
@@ -197,18 +197,18 @@ const fetchParsedRecords = async ({ start, end, columns, tickers }) => {
 
   const records = buildRecords(dates);
 
-  console.log(records, "records");
+  // console.log(records, "records");
 
   const schema = { records, symbols, dates };
 
-  console.log(schema, "schema");
+  // console.log(schema, "schema");
 
   const result = Object.entries(recordHash).reduce(
     populate(start, end),
     schema
   );
 
-  // console.log(result.records, "records"); // TODO: in heroku, Price is undefined, 1d/7d/30d is NaN
+  console.log(result.records, "records"); // TODO: in heroku, Price is undefined, 1d/7d/30d is NaN
 
   return result;
 };
