@@ -108,7 +108,7 @@ const fetchRecords = async ({ start, end, columns, tickers }) => {
 const buildRecordHash = records => {
   return records.reduce((records, [ticker, date, price]) => {
     records[ticker] = records[ticker] ? records[ticker] : {};
-    records[ticker][+moment(date)] = price;
+    records[ticker][Number(moment(date))] = price;
     return records;
   }, {});
 };
@@ -117,7 +117,7 @@ const buildDateList = (start, end) => {
   const day = moment(start);
   const dateList = [];
   do {
-    dateList.push(+day);
+    dateList.push(Number(day));
     day.add(1, "day");
   } while (day < end);
   return dateList;
@@ -131,15 +131,15 @@ const buildRecords = dates => {
 };
 
 const getFirstPrice = (prices, start, end) => {
-  console.log(moment, "what is this moment????");
   const day = moment(start);
+  console.log(prices, "the prices passed in");
 
-  while (!prices[+day] && day < end) {
+  while (!prices[Number(day)] && day < end) {
     day.add(1, "day");
   }
-
-  console.log(prices[+day], "what does this return???");
-  return prices[+day];
+  // console.log(typeof +day, typeof Number(day), "+ first then normal");
+  console.log(prices[Number(day)], "what does this return???");
+  return prices[Number(day)];
 };
 
 const priceMap = [["1d", 1], ["7d", 7], ["30d", 30]];
@@ -160,7 +160,7 @@ const populate = (start, end) => (data, [company, prices]) => {
         } else {
           const prevPrice =
             data.records[data.dates[index - diff]][company].Price;
-          prices[name] = +(prevPrice - mostRecentPrice).toFixed(2);
+          prices[name] = Number(prevPrice - mostRecentPrice).toFixed(2);
         }
         return prices;
       },
