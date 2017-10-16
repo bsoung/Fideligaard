@@ -165,6 +165,7 @@ const populate = (start, end) => (data, [company, prices]) => {
   });
 
   // return an object populated with the keys 'records', 'symbols', 'dates' and their values
+  console.log(data.records, "populate data records");
   return data;
 };
 
@@ -203,12 +204,17 @@ const fetchParsedRecords = async ({ start, end, columns, tickers }) => {
 
   // console.log(schema, "schema");
 
-  console.log(Object.entries(recordHash), "*********************");
+  // console.log(recordHash, "what does record hash look like");
 
+  // populate data == {dates: [1451624400000], symbols: ['A'], records: { '1451624400000': {'A': [obj]} }}
+
+  // console.log(schema, "schema****************");
   const result = Object.entries(recordHash).reduce(
     populate(start, end),
     schema
   );
+
+  // 1454389200000': { A: { Price: 37.07, Ticker: 'A', '1d': 0.62, '7d': 0.44, '30d': 3.62 } },
 
   // console.log(result.records, "records"); // TODO: in heroku, Price is undefined, 1d/7d/30d is NaN
 
