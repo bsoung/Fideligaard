@@ -181,12 +181,27 @@ const fetchParsedRecords = async ({ start, end, columns, tickers }) => {
   // build [ticker, date, price]
   const recordArray = await fetchRecords({ start, end, columns, tickers });
 
+  console.log(recordArray, "recordArray");
+
   const recordHash = buildRecordHash(recordArray);
+
+  console.log(recordHash, "recordHash");
+
   const symbols = Object.keys(recordHash);
+
+  console.log(symbols, "symbols");
+
   const dates = buildDateList(start, end);
+
+  console.log(dates, "dates");
+
   const records = buildRecords(dates);
 
+  console.log(records, "records");
+
   const schema = { records, symbols, dates };
+
+  console.log(schema, "schema");
 
   const result = Object.entries(recordHash).reduce(
     populate(start, end),
