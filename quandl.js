@@ -185,7 +185,7 @@ const fetchParsedRecords = async ({ start, end, columns, tickers }) => {
 
   const recordHash = buildRecordHash(recordArray);
 
-  console.log(recordHash, "recordHash");
+  // console.log(recordHash, "recordHash");
 
   const symbols = Object.keys(recordHash);
 
@@ -201,7 +201,9 @@ const fetchParsedRecords = async ({ start, end, columns, tickers }) => {
 
   const schema = { records, symbols, dates };
 
-  console.log(schema, "schema");
+  // console.log(schema, "schema");
+
+  console.log(Object.entries(recordHash), "*********************");
 
   const result = Object.entries(recordHash).reduce(
     populate(start, end),
