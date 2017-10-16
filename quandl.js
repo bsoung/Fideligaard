@@ -14,7 +14,6 @@ const buildUrl = queries => {
 };
 
 const formatDate = date => date.format("YYYYMMDD");
-
 const midDate = (start, end) => moment((start + end) / 2).startOf("day");
 
 //////////////////////
@@ -27,6 +26,7 @@ const fetchTickers = async (date, days = 10) => {
   if (!date) throw new Error("A date is required");
 
   date = moment(+date);
+
   const columns = "qopts.columns=ticker";
 
   let tickers;
@@ -40,7 +40,6 @@ const fetchTickers = async (date, days = 10) => {
   if (!tickers) throw new Error("Unable to fetch tickers");
 
   tickers = tickers.datatable.data.map(ticker => ticker[0]);
-  console.log(`Retrieved ${tickers.length} tickers.`);
   return tickers;
 };
 
@@ -57,16 +56,23 @@ const fetchRecords = async ({ start, end, columns, tickers }) => {
   if (!start) throw new Error("A start date is required");
 
   start = moment(start);
+
+  // clone moment to avoid mutating original
   end = end ? moment(end) : start.clone().add(1, "year");
   const date = `date.gte=${formatDate(start)}&date.lt=${formatDate(end)}`;
 
   tickers = tickers === undefined ? 39 : tickers;
+
   if (tickers.join) {
+    console.log("ticker join conditional true");
     tickers = `ticker=${tickers.join(",")}`;
   } else if (tickers > 0) {
     let tickerArray = await fetchTickers(midDate(start, end));
     const mod = Math.ceil(tickerArray.length / tickers);
+
+    // making sure selected tickers are within state and end date;
     tickerArray = tickerArray.filter((t, i) => i % mod === 0);
+
     tickers = `ticker=${tickerArray.join(",")}`;
   }
 
@@ -75,19 +81,21 @@ const fetchRecords = async ({ start, end, columns, tickers }) => {
 
   let records = [];
   let next;
+
   do {
     const queries = [date, columns, tickers, next].filter(q => !!q);
     let data = await fetch(buildUrl(queries));
+
     data = await data.json();
     records = records.concat(data.datatable.data);
+
+    console.log(records, "records");
 
     next = data.meta.next_cursor_id;
     next = next ? `qopts.cursor_id=${next}` : next;
   } while (next);
 
   if (!records) throw new Error("Unable to fetch records");
-
-  console.log(`Retrieved ${records.length} records.`);
   return records;
 };
 
@@ -122,6 +130,7 @@ const buildRecords = dates => {
 
 const getFirstPrice = (prices, start, end) => {
   const day = moment(start);
+
   while (!prices[+day] && day < end) {
     day.add(1, "day");
   }
