@@ -137,6 +137,7 @@ const getFirstPrice = (prices, start, end) => {
   while (!prices[Number(day)] && day < end) {
     day.add(1, "day");
   }
+  console.log(Number(day), "what does heroku think day is");
   // console.log(typeof +day, typeof Number(day), "+ first then normal");
   console.log(prices[Number(day)], "what does this return???");
   return prices[Number(day)];
