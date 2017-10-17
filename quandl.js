@@ -2,7 +2,6 @@ require("isomorphic-fetch");
 require("dotenv").config();
 const moment = require("moment-timezone");
 const TIME_ZONE = "America/New_York";
-// moment.utc(value, "DD/MM/YYYY").unix();
 
 ///////////////////////////
 // Fetching private methods
@@ -28,8 +27,6 @@ const fetchTickers = async (date, days = 10) => {
   if (!date) throw new Error("A date is required");
 
   date = moment(+date).tz(TIME_ZONE);
-
-  console.log(date, "what is our date here - compare to local again");
 
   const columns = "qopts.columns=ticker";
 
@@ -101,7 +98,6 @@ const fetchRecords = async ({ start, end, columns, tickers }) => {
 
   if (!records) throw new Error("Unable to fetch records");
 
-  // console.log(records, "records"); // HERE - stock name/date/price show up
   return records;
 };
 
@@ -141,9 +137,7 @@ const getFirstPrice = (prices, start, end) => {
   while (!prices[+day] && day < end) {
     day.add(1, "day");
   }
-  console.log(+day, "what does heroku think day is");
-  // console.log(typeof +day, typeof Number(day), "+ first then normal");
-  console.log(prices[+day], "what does this return???");
+
   return prices[+day];
 };
 
@@ -151,13 +145,9 @@ const priceMap = [["1d", 1], ["7d", 7], ["30d", 30]];
 
 const populate = (start, end) => (data, [company, prices]) => {
   let mostRecentPrice = getFirstPrice(prices, start, end);
-  console.log(mostRecentPrice, "what is this most recent price???");
   data.dates.map((day, index) => {
     const price = prices[day];
-    // console.log(price, "are these the price"); // TODO: PROBLEM: prices here ALL undefined in heroku
     mostRecentPrice = price ? price : mostRecentPrice;
-    // console.log(mostRecentPrice, 'most recent price')
-
     data.records[day][company] = priceMap.reduce(
       (prices, [name, diff]) => {
         if (index - diff < 0) {
@@ -174,7 +164,6 @@ const populate = (start, end) => (data, [company, prices]) => {
   });
 
   // return an object populated with the keys 'records', 'symbols', 'dates' and their values
-  // console.log(data.records, "populate data records");
   return data;
 };
 
@@ -190,42 +179,18 @@ const fetchParsedRecords = async ({ start, end, columns, tickers }) => {
 
   // build [ticker, date, price]
   const recordArray = await fetchRecords({ start, end, columns, tickers });
-
-  // console.log(recordArray, "recordArray"); // HERE - all good //  [ 'A', '2016-05-11', 42.46 ],
-
   const recordHash = buildRecordHash(recordArray);
-
-  // console.log(recordHash, "recordHash");
-
   const symbols = Object.keys(recordHash);
-
-  // console.log(symbols, "symbols"); // all good
-
   const dates = buildDateList(start, end);
-
-  // console.log(dates, "dates"); // all good
-
   const records = buildRecords(dates);
-
-  // console.log(records, "records");
 
   const schema = { records, symbols, dates };
 
-  // console.log(schema, "schema");
-
-  // console.log(recordHash, "what does record hash look like");
-
-  // populate data == {dates: [1451624400000], symbols: ['A'], records: { '1451624400000': {'A': [obj]} }}
-
-  // console.log(schema, "schema****************");
+  // TODO: understand wtf is happening here
   const result = Object.entries(recordHash).reduce(
     populate(start, end),
     schema
   );
-
-  // 1454389200000': { A: { Price: 37.07, Ticker: 'A', '1d': 0.62, '7d': 0.44, '30d': 3.62 } },
-
-  // console.log(result.records, "records"); // TODO: in heroku, Price is undefined, 1d/7d/30d is NaN
 
   return result;
 };

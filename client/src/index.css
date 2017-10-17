@@ -10,10 +10,6 @@
 	display: none;
 }
 
-* {
-	scroll: "no";
-}
-
 /**
  * Overwrite React Slider default styles
  */

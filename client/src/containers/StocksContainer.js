@@ -32,6 +32,7 @@ class StocksContainer extends PureComponent {
   }
 }
 
+// memoized selectors - grabbing bits of redux state
 const getDate = state => state.dates.current;
 const getRecords = state => state.stocks.records;
 const getFilter = state => state.stocks.filter;
@@ -46,9 +47,11 @@ const getCurrentStocks = createSelector(
   }
 );
 
+// searching stock by ticker name
 const getCurrentFilteredStocks = createSelector(
   [getCurrentStocks, getFilter],
   (stocks, filter) => {
+    // ignore uppercase searches
     const query = filter.toUpperCase();
     return filter
       ? stocks.filter(stock => stock.Ticker.includes(query))
@@ -56,6 +59,7 @@ const getCurrentFilteredStocks = createSelector(
   }
 );
 
+// TODO: understand this code
 const getCurrentFilteredSortedStocks = createSelector(
   [getCurrentFilteredStocks, getSortColumn, getSortDirection],
   (stocks, column, direction) => {
