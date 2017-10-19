@@ -18,7 +18,7 @@ const Page = ({ match }) => {
         <Grid container={true} stackable>
           <Grid.Row>
             <Grid.Column tablet={16} computer={6}>
-              <StocksContainerWrapper />
+              <StocksContainerWrapper headerContent="Stocks" />
             </Grid.Column>
             <Grid.Column tablet={16} computer={10}>
               <DateSliderContainer />

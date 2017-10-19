@@ -28,6 +28,12 @@
 
 .stocks-component__segment {
 	overflow: auto !important;
-	height: 614px !important;
-	max-height: 614px !important;
+	height: 900px !important;
+	max-height: 900px !important;
+}
+
+.portfolio-stocks-component__segment {
+	overflow: auto !important;
+	height: 561px !important;
+	max-height: 561px !important;
 }

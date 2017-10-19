@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import Trade from "../../components/resources/Trade";
 import { portfolioActions } from "../../actions";
+import AlertContainer from "react-alert";
 
 class TradeContainer extends React.Component {
   constructor(props) {
@@ -15,6 +16,27 @@ class TradeContainer extends React.Component {
       symbols: []
     };
   }
+
+  alertOptions = {
+    offset: 14,
+    position: "bottom left",
+    theme: "dark",
+    time: 5000,
+    transition: "scale"
+  };
+
+  showAlert = () => {
+    this.msg.show("You do not have this stock!", {
+      time: 3000,
+      type: "fail",
+      icon: (
+        <img
+          src="https://www.debian.org/releases/stable/arm64/images/warning.png"
+          alt="sell-error"
+        />
+      )
+    });
+  };
 
   stocks = () => this.props.portfolio.stocks;
   buying = () => this.state.action === "Buy";
@@ -62,8 +84,13 @@ class TradeContainer extends React.Component {
 
   onChangeAction = (_, { value }) => {
     const [action, symbols] = [value, this.getSymbols(value)];
+    console.log(action, symbols);
+
+    // if we actually bought symbols, only then can we sell em
     if (symbols.length) {
       this.setState({ action, symbols });
+    } else {
+      this.showAlert();
     }
   };
 
@@ -125,8 +152,13 @@ class TradeContainer extends React.Component {
     };
 
     const props = { prices, actions, valid, trade: this.state };
-
-    return <Trade {...props} />;
+    console.log(this.props.prices, "portfolio");
+    return (
+      <div className="trade__component">
+        <AlertContainer ref={a => (this.msg = a)} {...this.alertOptions} />
+        <Trade {...props} />
+      </div>
+    );
   }
 }
 

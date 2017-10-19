@@ -3,10 +3,6 @@ import React, { Component } from "react";
 import StocksContainer from "./StocksContainer";
 
 class StocksWrapper extends Component {
-	constructor(props) {
-		super(props);
-	}
-
 	onTrade = ticker => () => this.props.history.push(`/trade?ticker=${ticker}`);
 
 	render() {

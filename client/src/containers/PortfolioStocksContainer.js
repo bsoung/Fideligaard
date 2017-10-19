@@ -2,12 +2,19 @@ import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { createSelector } from "reselect";
-import Stocks from "../components/Stocks";
+import PortfolioStocks from "../components/PortfolioStocks";
 import { stockActions } from "../actions";
+import { portfolioActions } from "../actions";
+import _ from "lodash";
 
-class StocksContainer extends PureComponent {
+class PortfolioStocksContainer extends PureComponent {
   componentDidMount() {
-    this.props.hydrateStocks();
+    this.props.updateProfileStocks(this.props.stocks);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!_.isEqual(this.props.stocks, nextProps.stocks))
+      this.props.updateProfileStocks(nextProps.stocks);
   }
 
   onSort = column => () => {
@@ -17,12 +24,12 @@ class StocksContainer extends PureComponent {
   };
 
   onFilter = event => {
-    this.props.updateFilter(event.target.value);
+    this.props.updatePortfolioFilter(event.target.value);
   };
 
   render() {
     return (
-      <Stocks
+      <PortfolioStocks
         {...this.props}
         onSort={this.onSort}
         onFilter={this.onFilter}
@@ -35,15 +42,26 @@ class StocksContainer extends PureComponent {
 // memoized selectors - grabbing bits of redux state
 const getDate = state => state.dates.current;
 const getRecords = state => state.stocks.records;
-const getFilter = state => state.stocks.filter;
+const getFilter = state => state.portfolio.filter;
 const getSortColumn = state => state.stocks.sort.column;
 const getSortDirection = state => state.stocks.sort.direction;
 
+// portfolio memoizers
+const getPortfolioStocks = state => state.portfolio.stocks;
+
 const getCurrentStocks = createSelector(
-  [getRecords, getDate],
-  (records, date) => {
+  [getRecords, getPortfolioStocks, getDate],
+  (records, portfolioStocks, date) => {
     const selection = records[date];
-    return selection ? Object.values(selection) : [];
+    const tickers = Object.keys(portfolioStocks);
+
+    let currentStocks = selection ? Object.values(selection) : [];
+
+    let filtered = currentStocks.filter(function(stock) {
+      return this.indexOf(stock.Ticker) !== -1;
+    }, tickers);
+
+    return filtered;
   }
 );
 
@@ -80,7 +98,8 @@ const mapStateToProps = (state, ownProps) => {
     date: state.dates.current,
     sort: state.stocks.sort,
     filter: state.stocks.filter,
-    onTrade: ownProps.onTrade
+    onTrade: ownProps.onTrade,
+    portfolio: state.portfolio
   };
 };
 
@@ -88,9 +107,12 @@ const mapDispatchToProps = dispatch => ({
   hydrateStocks: () => dispatch(stockActions.hydrateStocks()),
   updateSort: (column, direction) =>
     dispatch(stockActions.setSort(column, direction)),
-  updateFilter: filter => dispatch(stockActions.setFilter(filter))
+  updatePortfolioFilter: filter =>
+    dispatch(portfolioActions.setPortfolioFilter(filter)),
+  updateProfileStocks: stock =>
+    dispatch(portfolioActions.setPortfolioStocks(stock))
 });
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(StocksContainer)
+  connect(mapStateToProps, mapDispatchToProps)(PortfolioStocksContainer)
 );

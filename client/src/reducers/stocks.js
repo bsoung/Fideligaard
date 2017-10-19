@@ -11,7 +11,7 @@ const defaultState = {
   filter: ""
 };
 
-const dates = (state = defaultState, action) => {
+export default (state = defaultState, action) => {
   switch (action.type) {
     case stockActions.SET_STOCKS:
       return { ...state, ...action.data };
@@ -24,4 +24,3 @@ const dates = (state = defaultState, action) => {
   }
 };
 
-export default dates;

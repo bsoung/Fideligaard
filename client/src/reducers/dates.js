@@ -6,7 +6,7 @@ const defaultState = {
   end: 1483246800000
 };
 
-const dates = (state = defaultState, action) => {
+export default (state = defaultState, action) => {
   switch (action.type) {
     case dateActions.SET_CURRENT:
       return { ...state, current: action.data };
@@ -17,4 +17,3 @@ const dates = (state = defaultState, action) => {
   }
 };
 
-export default dates;

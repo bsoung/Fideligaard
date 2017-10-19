@@ -19,6 +19,7 @@ const options = resourceNames.map(resource => ({
   value: resource
 }));
 
+// displays the type of resource displaying below the big date slider
 export const ResourceContainer = withRouter(({ type, history }) => (
   <Segment>
     <Grid>

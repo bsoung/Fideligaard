@@ -2,10 +2,17 @@ import { portfolioActions } from "../actions";
 
 const defaultState = {
   balance: 100000,
-  stocks: {}
+  dates: [],
+  stocks: {},
+  fullStocks: [],
+  sort: {
+    column: "Ticker",
+    direction: true
+  },
+  filter: ""
 };
 
-const dates = (state = defaultState, action) => {
+export default (state = defaultState, action) => {
   switch (action.type) {
     case portfolioActions.TRADE:
       const { cost, ticker, quantity } = action.data;
@@ -21,10 +28,15 @@ const dates = (state = defaultState, action) => {
         delete stocks[ticker];
       }
 
-      return { balance, stocks };
+      return { ...state, balance, stocks };
+
+    case portfolioActions.SET_PORTFOLIO_STOCKS:
+      return { ...state, fullStocks: action.data };
+    case portfolioActions.SET_PORTFOLIO_SORT:
+      return { ...state, sort: action.data };
+    case portfolioActions.SET_PORTFOLIO_FILTER:
+      return { ...state, filter: action.data };
     default:
       return state;
   }
 };
-
-export default dates;

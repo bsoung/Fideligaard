@@ -3,6 +3,7 @@ require("isomorphic-fetch");
 
 // Express
 const express = require("express");
+const cachedStocks = require("./stockData.json");
 const app = express();
 
 // Check if stock data exists
@@ -28,7 +29,7 @@ if (process.env.NODE_ENV === "production") {
 // Hydration Endpoint
 app.get("/api/stocks", (req, res, next) => {
   try {
-    res.json(require("./stockData.json"));
+    res.json(cachedStocks);
   } catch (error) {
     next(error);
   }

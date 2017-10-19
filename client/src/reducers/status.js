@@ -1,6 +1,6 @@
 import { statusActions } from "../actions";
 
-const status = (state = { isFetching: false, error: null }, action) => {
+export default (state = { isFetching: false, error: null }, action) => {
   switch (action.type) {
     case statusActions.SET_FETCHING:
       return { error: null, isFetching: true };
@@ -13,4 +13,3 @@ const status = (state = { isFetching: false, error: null }, action) => {
   }
 };
 
-export default status;
