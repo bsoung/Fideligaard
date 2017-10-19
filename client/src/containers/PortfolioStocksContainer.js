@@ -20,7 +20,7 @@ class PortfolioStocksContainer extends PureComponent {
   onSort = column => () => {
     const direction =
       this.props.sort.column === column ? !this.props.sort.direction : true;
-    this.props.updateSort(column, direction);
+    this.props.updatePortfolioSort(column, direction);
   };
 
   onFilter = event => {
@@ -43,8 +43,8 @@ class PortfolioStocksContainer extends PureComponent {
 const getDate = state => state.dates.current;
 const getRecords = state => state.stocks.records;
 const getFilter = state => state.portfolio.filter;
-const getSortColumn = state => state.stocks.sort.column;
-const getSortDirection = state => state.stocks.sort.direction;
+const getSortColumn = state => state.portfolio.sort.column;
+const getSortDirection = state => state.portfolio.sort.direction;
 
 // portfolio memoizers
 const getPortfolioStocks = state => state.portfolio.stocks;
@@ -96,8 +96,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     stocks: getCurrentFilteredSortedStocks(state),
     date: state.dates.current,
-    sort: state.stocks.sort,
-    filter: state.stocks.filter,
+    sort: state.portfolio.sort,
+    filter: state.portfolio.filter,
     onTrade: ownProps.onTrade,
     portfolio: state.portfolio
   };
@@ -105,8 +105,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
   hydrateStocks: () => dispatch(stockActions.hydrateStocks()),
-  updateSort: (column, direction) =>
-    dispatch(stockActions.setSort(column, direction)),
+  updatePortfolioSort: (column, direction) =>
+    dispatch(portfolioActions.setPortfolioSort(column, direction)),
   updatePortfolioFilter: filter =>
     dispatch(portfolioActions.setPortfolioFilter(filter)),
   updateProfileStocks: stock =>

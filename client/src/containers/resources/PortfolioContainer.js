@@ -5,7 +5,6 @@ import { withRouter } from "react-router-dom";
 
 class PortfolioContainer extends Component {
 	render() {
-		console.log(this.props, "profile container");
 		return <Portfolio {...this.props} />;
 	}
 }
@@ -17,13 +16,4 @@ const mapStateToProps = (state, ownProps) => {
 	};
 };
 
-const mapDispatchToProps = dispatch => ({
-	// hydrateStocks: () => dispatch(stockActions.hydrateStocks()),
-	// updateSort: (column, direction) =>
-	//   dispatch(stockActions.setSort(column, direction)),
-	// updateFilter: filter => dispatch(stockActions.setFilter(filter))
-});
-
-export default withRouter(
-	connect(mapStateToProps, mapDispatchToProps)(PortfolioContainer)
-);
+export default withRouter(connect(mapStateToProps, null)(PortfolioContainer));

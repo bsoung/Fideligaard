@@ -17,7 +17,7 @@ const headers = [
 const calculateReturns = (price, amount) => {
   if (price === 0 || typeof price !== "number") {
     price = "W";
-    return price.toFixed(2);
+    return price;
   }
 
   return (price * amount).toFixed(2);
@@ -37,7 +37,9 @@ export default ({
     Quantity: portfolio.stocks[stock.Ticker],
     Ticker: stock.Ticker,
     "Cost Basis": `WIP`,
-    "Current Value": `$${portfolio.stocks[stock.Ticker] * stock.Price}`,
+    "Current Value": `$${(portfolio.stocks[stock.Ticker] * stock.Price).toFixed(
+      2
+    )}`,
     "Profit/Loss": `WIP`,
     Price: `$${stock.Price}`,
     "1d": `$${calculateReturns(stock["1d"], portfolio.stocks[stock.Ticker])}`,
