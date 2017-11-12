@@ -132,7 +132,6 @@ const buildRecords = dates => {
 
 const getFirstPrice = (prices, start, end) => {
   const day = moment(start).tz(TIME_ZONE);
-  console.log(prices, "the prices passed in");
 
   while (!prices[+day] && day < end) {
     day.add(1, "day");
@@ -186,7 +185,6 @@ const fetchParsedRecords = async ({ start, end, columns, tickers }) => {
 
   const schema = { records, symbols, dates };
 
-  // TODO: understand wtf is happening here
   const result = Object.entries(recordHash).reduce(
     populate(start, end),
     schema

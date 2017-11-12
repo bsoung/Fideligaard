@@ -13,8 +13,6 @@ const Trade = ({ prices, trade, actions, valid }) => {
     onChange: actions.onChangeSymbol
   };
 
-  console.log(actions, "wtf is this");
-
   const actionOptions = {
     options: ["Buy", "Sell"].map(option => ({ text: option, value: option })),
     value: trade.action,
